@@ -1,0 +1,21 @@
+{
+  "name": "rabbitmq-worker-queues-in-node-js",
+  "version": "1.0.0",
+  "description": "background processing in node using RabbitMQ",
+  "main": "src/index.js",
+  "author": "nithil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nithil/rabbitmq-work-queues-in-node-js/issues"
+  },
+  "homepage": "https://github.com/nithil/rabbitmq-work-queues-in-node-js#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nithil/rabbitmq-work-queues-in-node-js.git"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
