@@ -54,4 +54,11 @@ MessageBroker.getInstance = async function () {
   return instance;
 };
 
+process.on('exit', () => {
+  if (instance) {
+    console.log(`Closing rabbit mq channel`);
+    instance.channel.close();
+  }
+});
+
 module.exports = MessageBroker;
