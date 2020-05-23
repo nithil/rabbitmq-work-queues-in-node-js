@@ -8,14 +8,11 @@ const { sendEmailTo } = require('./helpers/mailer');
 
 const { sleep } = require('./helpers/sleep');
 
-MessageBroker.getInstance()
-  .then((broker) => {
+// By default RabbitMQ will send new messages to the workers using round-robin algorithm
+
+const listenToHelloQueue = async (broker) => {
+  try {
     const helloQueue = 'hello';
-
-    // By default RabbitMQ will send new messages to the workers using round-robin algorithm
-
-    // This tells RabbitMQ not to give more than two message to a worker at a time (Fair dispatch)
-    broker.channel.prefetch(2);
 
     // worker 1 for helloQueue
     console.log(' [*] worker 1 waiting for messages in %s ', helloQueue);
@@ -41,7 +38,13 @@ MessageBroker.getInstance()
       },
       { noAck: true }
     );
+  } catch (error) {
+    throw error;
+  }
+};
 
+const listenToEmailQueue = async (broker) => {
+  try {
     const emailQueue = 'email';
     // worker 1 for emailQueue
     console.log(' [*] worker 1 waiting for messages in %s ', emailQueue);
@@ -50,7 +53,7 @@ MessageBroker.getInstance()
       async (msg) => {
         console.log(' [x] Received by worker - 1 %s', msg.content.toString());
 
-        let form = JSON.parse(msg.content.toString());
+        const form = JSON.parse(msg.content.toString());
         await sendEmailTo(form.email);
         broker.channel.ack(msg);
       },
@@ -62,13 +65,33 @@ MessageBroker.getInstance()
     broker.channel.consume(
       emailQueue,
       async (msg) => {
+        // await sleep(5000);
         console.log(' [x] Received by worker - 2 %s', msg.content.toString());
 
-        let form = JSON.parse(msg.content.toString());
+        const form = JSON.parse(msg.content.toString());
         await sendEmailTo(form.email);
         broker.channel.ack(msg);
       },
       { noAck: false }
     );
-  })
-  .catch(console.error);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const connectAndListen = async () => {
+  try {
+    const broker = await MessageBroker.getInstance();
+
+    // This tells RabbitMQ not to give more than two message to a worker at a time (Fair dispatch)
+    broker.channel.prefetch(2);
+    // TODO: set prefetch for each queue differently
+
+    await listenToHelloQueue(broker);
+    await listenToEmailQueue(broker);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+connectAndListen();
