@@ -6,15 +6,15 @@
   "author": "nithil",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nithil/rabbitmq-work-queues-in-node-js/issues"
+    "url": "https://github.com/nithil/rabbitmq-worker-queues-in-node-js/issues"
   },
-  "homepage": "https://github.com/nithil/rabbitmq-work-queues-in-node-js#readme",
+  "homepage": "https://github.com/nithil/rabbitmq-worker-queues-in-node-js#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nithil/rabbitmq-work-queues-in-node-js.git"
+    "url": "git+https://github.com/nithil/rabbitmq-worker-queues-in-node-js.git"
   },
   "dependencies": {
     "amqplib": "^0.5.6",
