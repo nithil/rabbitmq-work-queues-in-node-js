@@ -4,6 +4,8 @@
 
 const MessageBroker = require('./singleton/rabbitmq');
 
+const { sendEmailTo } = require('./helpers/mailer');
+
 const { sleep } = require('./helpers/sleep');
 
 MessageBroker.getInstance()
@@ -38,6 +40,35 @@ MessageBroker.getInstance()
         console.log(' [x] Received by worker - 2 %s', msg.content.toString());
       },
       { noAck: true }
+    );
+
+    const emailQueue = 'email';
+    // worker 1 for emailQueue
+    console.log(' [*] worker 1 waiting for messages in %s ', emailQueue);
+    broker.channel.consume(
+      emailQueue,
+      async (msg) => {
+        console.log(' [x] Received by worker - 1 %s', msg.content.toString());
+
+        let form = JSON.parse(msg.content.toString());
+        await sendEmailTo(form.email);
+        broker.channel.ack(msg);
+      },
+      { noAck: false }
+    );
+
+    // worker 2 for emailQueue
+    console.log(' [*] worker 2 waiting for messages in %s ', emailQueue);
+    broker.channel.consume(
+      emailQueue,
+      async (msg) => {
+        console.log(' [x] Received by worker - 2 %s', msg.content.toString());
+
+        let form = JSON.parse(msg.content.toString());
+        await sendEmailTo(form.email);
+        broker.channel.ack(msg);
+      },
+      { noAck: false }
     );
   })
   .catch(console.error);
