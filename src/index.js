@@ -1,10 +1,13 @@
-const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
 
 const MessageBroker = require('./singleton/rabbitmq');
 
+const app = express();
+
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
 app.engine('html', require('ejs').renderFile);
 app.use(bodyParser.urlencoded({ extended: true }));
 
