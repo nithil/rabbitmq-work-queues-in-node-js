@@ -1,1 +1,1 @@
-# rabbitmq-work-queues-in-node-js
+# rabbitmq-worker-queues-in-node-js
